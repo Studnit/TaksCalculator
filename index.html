@@ -10,10 +10,10 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden; /* Hide scrollbars */
+            overflow: hidden;
         }
 
-        /* Body styling */
+        /* Body styling with background animation */
         body {
             font-family: 'Arial', sans-serif;
             display: flex;
@@ -21,15 +21,46 @@
             align-items: center;
             height: 100vh;
             color: #fff;
-            background: linear-gradient(45deg, #ff00cc, #3366ff, #33cc33, #ffcc00);
-            background-size: 400% 400%;
-            animation: gradientAnimation 20s ease infinite;
+            background: linear-gradient(180deg, #1e3c72, #2a5298);
+            animation: gradientAnimation 10s ease infinite;
         }
 
         @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% { background: linear-gradient(45deg, #1e3c72, #2a5298); }
+            25% { background: linear-gradient(45deg, #ff6a00, #ee0979); }
+            50% { background: linear-gradient(45deg, #3a1c71, #ffaf7b); }
+            75% { background: linear-gradient(45deg, #283c86, #45a247); }
+            100% { background: linear-gradient(45deg, #1e3c72, #2a5298); }
+        }
+
+        /* Snowflakes Styling */
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            font-size: 1em;
+            user-select: none;
+            pointer-events: none;
+            animation: fall 10s linear infinite, drift 5s ease-in-out infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -10%;
+                opacity: 1;
+            }
+            100% {
+                top: 110%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes drift {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(50px);
+            }
         }
 
         /* Container styles */
@@ -208,6 +239,24 @@
                 }
             }
         }
+
+        // Create Snowflakes
+        function createSnowflake() {
+            const snowflake = document.createElement("div");
+            snowflake.classList.add("snowflake");
+            snowflake.textContent = "❄";
+            snowflake.style.left = Math.random() * window.innerWidth + "px";
+            snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
+            snowflake.style.animationDuration = Math.random() * 5 + 5 + "s";
+            document.body.appendChild(snowflake);
+
+            // Remove the snowflake after it falls
+            setTimeout(() => {
+                snowflake.remove();
+            }, 10000);
+        }
+
+        setInterval(createSnowflake, 200); // Generate snowflakes every 200ms
     </script>
 </body>
 </html>
