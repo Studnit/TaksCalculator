@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Animated Background - Moving Dots & Gradient</title>
+    <style>
+        /* Reset margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Hide scrollbars */
+        }
+
+        /* Body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        /* Gradient Background Animation */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff00cc, #3366ff, #33cc33, #ffcc00);
+            background-size: 400% 400%;
+            animation: gradientAnimation 20s ease infinite;
+            z-index: -2;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Container styles */
+        .container {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #ddd;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #fff;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .output-area {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            font-size: 14px;
+        }
+
+        /* Floating Dots Styling */
+        .dot {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            animation: float 10s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-100px) translateX(100px);
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+        }
+
+        /* Developer Info */
+        .developer {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Floating Dots with Moving Gradient</h1>
+        <label for="percentage">Enter Percentage (0-100):</label>
+        <input type="number" id="percentage" placeholder="Enter percentage">
+        
+        <label for="minutes">Enter Minutes (0-480):</label>
+        <input type="number" id="minutes" placeholder="Enter minutes">
+        
+        <button onclick="calculate()">Calculate</button>
+        
+        <div id="output" class="output-area">Output will appear here.</div>
+    </div>
+
+    <!-- Create Floating Dots -->
+    <script>
+        // Function to create floating dots
+        function createDot() {
+            const dot = document.createElement("div");
+            const size = Math.random() * 20 + 15; // Random size between 15px and 35px
+            dot.classList.add("dot");
+            dot.style.width = `${size}px`;
+            dot.style.height = `${size}px`;
+            dot.style.top = `${Math.random() * window.innerHeight}px`;
+            dot.style.left = `${Math.random() * window.innerWidth}px`;
+            dot.style.animationDuration = `${Math.random() * 10 + 5}s`; // Random animation duration
+            document.body.appendChild(dot);
+        }
+
+        // Create multiple floating dots
+        for (let i = 0; i < 30; i++) {
+            createDot();
+        }
+
+        // Calculator Logic
+        function calculate() {
+            const percentageInput = document.getElementById("percentage").value;
+            const minutesInput = document.getElementById("minutes").value;
+            const outputArea = document.getElementById("output");
+            const totalHours = 8;
+            const totalMinutes = totalHours * 60;
+            outputArea.textContent = ""; // Reset output
+
+            if (percentageInput) {
+                const percentage = parseFloat(percentageInput);
+                if (percentage >= 0 && percentage <= 100) {
+                    const hours = (percentage / 100) * totalHours;
+                    outputArea.textContent += `${percentage}% of ${totalHours} hours is ${hours.toFixed(2)} hours.\n`;
+                } else {
+                    outputArea.textContent += "Percentage must be between 0 and 100.\n";
+                }
+            }
+
+            if (minutesInput) {
+                const minutes = parseFloat(minutesInput);
+                if (minutes >= 0 && minutes <= totalMinutes) {
+                    const percentage = (minutes / totalMinutes) * 100;
+                    outputArea.textContent += `${minutes} minutes is ${percentage.toFixed(2)}% of 8 hours.\n`;
+                } else {
+                    outputArea.textContent += "Minutes must be between 0 and 480.\n";
+                }
+            }
+        }
+    </script>
+
+    <!-- Developer's Info -->
+    <div class="developer">Developer: Nitesh Kharose</div>
+</body>
+</html>
