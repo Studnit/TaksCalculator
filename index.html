@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Animated Background - Moving Dots & Gradient</title>
+    <title>Time and Percentage Calculator</title>
     <style>
         /* Reset margin and padding */
         body, html {
@@ -21,20 +21,9 @@
             align-items: center;
             height: 100vh;
             color: #fff;
-        }
-
-        /* Gradient Background Animation */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             background: linear-gradient(45deg, #ff00cc, #3366ff, #33cc33, #ffcc00);
             background-size: 400% 400%;
             animation: gradientAnimation 20s ease infinite;
-            z-index: -2;
         }
 
         @keyframes gradientAnimation {
@@ -47,10 +36,10 @@
         .container {
             position: relative;
             z-index: 2;
-            background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
             padding: 30px;
-            max-width: 400px;
+            width: 400px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
@@ -59,7 +48,6 @@
             font-size: 24px;
             margin-bottom: 20px;
             color: #fff;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         label {
@@ -69,7 +57,7 @@
             font-size: 14px;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
@@ -103,31 +91,9 @@
             border-radius: 5px;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
             font-size: 14px;
         }
 
-        /* Floating Dots Styling */
-        .dot {
-            position: absolute;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.5);
-            animation: float 10s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0);
-            }
-            50% {
-                transform: translateY(-100px) translateX(100px);
-            }
-            100% {
-                transform: translateY(0) translateX(0);
-            }
-        }
-
-        /* Developer Info */
         .developer {
             position: fixed;
             bottom: 10px;
@@ -142,70 +108,106 @@
 </head>
 <body>
     <div class="container">
-        <h1> Allocation Time Calculator</h1>
-        <label for="percentage">Enter Percentage (0-100):</label>
-        <input type="number" id="percentage" placeholder="Enter percentage">
+        <h1>Time and Percentage Calculator</h1>
         
-        <label for="minutes">Enter Minutes (0-480):</label>
-        <input type="number" id="minutes" placeholder="Enter minutes">
+        <label for="inputType">Select Calculation Type:</label>
+        <select id="inputType" onchange="toggleInputFields()">
+            <option value="minutes">Minutes to Percentage</option>
+            <option value="hours">Hours to Percentage</option>
+            <option value="percentage">Percentage to Time</option>
+        </select>
+        
+        <div id="minutesInputField">
+            <label for="minutes">Enter Minutes Worked (out of 480):</label>
+            <input type="number" id="minutes" placeholder="Enter minutes worked" min="0" max="480">
+        </div>
+        
+        <div id="hoursInputField" style="display: none;">
+            <label for="hours">Enter Hours Worked (out of 8):</label>
+            <input type="number" id="hours" placeholder="Enter hours worked" min="0" max="8">
+        </div>
+
+        <div id="percentageInputField" style="display: none;">
+            <label for="percentage">Enter Percentage (0-100):</label>
+            <input type="number" id="percentage" placeholder="Enter percentage" min="0" max="100">
+        </div>
         
         <button onclick="calculate()">Calculate</button>
         
         <div id="output" class="output-area">Output will appear here.</div>
     </div>
 
-    <!-- Create Floating Dots -->
+    <!-- Developer's Info -->
+    <div class="developer">Developer: Nitesh Kharose</div>
+
     <script>
-        // Function to create floating dots
-        function createDot() {
-            const dot = document.createElement("div");
-            const size = Math.random() * 20 + 15; // Random size between 15px and 35px
-            dot.classList.add("dot");
-            dot.style.width = `${size}px`;
-            dot.style.height = `${size}px`;
-            dot.style.top = `${Math.random() * window.innerHeight}px`;
-            dot.style.left = `${Math.random() * window.innerWidth}px`;
-            dot.style.animationDuration = `${Math.random() * 10 + 5}s`; // Random animation duration
-            document.body.appendChild(dot);
+        function toggleInputFields() {
+            const inputType = document.getElementById("inputType").value;
+            const minutesField = document.getElementById("minutesInputField");
+            const hoursField = document.getElementById("hoursInputField");
+            const percentageField = document.getElementById("percentageInputField");
+
+            minutesField.style.display = "none";
+            hoursField.style.display = "none";
+            percentageField.style.display = "none";
+
+            if (inputType === "minutes") {
+                minutesField.style.display = "block";
+            } else if (inputType === "hours") {
+                hoursField.style.display = "block";
+            } else if (inputType === "percentage") {
+                percentageField.style.display = "block";
+            }
         }
 
-        // Create multiple floating dots
-        for (let i = 0; i < 30; i++) {
-            createDot();
-        }
-
-        // Calculator Logic
         function calculate() {
-            const percentageInput = document.getElementById("percentage").value;
-            const minutesInput = document.getElementById("minutes").value;
+            const inputType = document.getElementById("inputType").value;
             const outputArea = document.getElementById("output");
+
             const totalHours = 8;
             const totalMinutes = totalHours * 60;
+
             outputArea.textContent = ""; // Reset output
 
-            if (percentageInput) {
-                const percentage = parseFloat(percentageInput);
-                if (percentage >= 0 && percentage <= 100) {
-                    const hours = (percentage / 100) * totalHours;
-                    outputArea.textContent += `${percentage}% of ${totalHours} hours is ${hours.toFixed(2)} hours.\n`;
+            if (inputType === "minutes") {
+                const minutesWorked = document.getElementById("minutes").value;
+                if (minutesWorked) {
+                    if (minutesWorked >= 0 && minutesWorked <= totalMinutes) {
+                        const percentage = (minutesWorked / totalMinutes) * 100;
+                        outputArea.textContent = `${minutesWorked} minutes is ${percentage.toFixed(2)}% of 8 hours.`;
+                    } else {
+                        outputArea.textContent = "Please enter minutes between 0 and 480.";
+                    }
                 } else {
-                    outputArea.textContent += "Percentage must be between 0 and 100.\n";
+                    outputArea.textContent = "Please enter a valid number of minutes.";
                 }
-            }
-
-            if (minutesInput) {
-                const minutes = parseFloat(minutesInput);
-                if (minutes >= 0 && minutes <= totalMinutes) {
-                    const percentage = (minutes / totalMinutes) * 100;
-                    outputArea.textContent += `${minutes} minutes is ${percentage.toFixed(2)}% of 8 hours.\n`;
+            } else if (inputType === "hours") {
+                const hoursWorked = document.getElementById("hours").value;
+                if (hoursWorked) {
+                    if (hoursWorked >= 0 && hoursWorked <= totalHours) {
+                        const percentage = (hoursWorked / totalHours) * 100;
+                        outputArea.textContent = `${hoursWorked} hours is ${percentage.toFixed(2)}% of 8 hours.`;
+                    } else {
+                        outputArea.textContent = "Please enter hours between 0 and 8.";
+                    }
                 } else {
-                    outputArea.textContent += "Minutes must be between 0 and 480.\n";
+                    outputArea.textContent = "Please enter a valid number of hours.";
+                }
+            } else if (inputType === "percentage") {
+                const percentage = document.getElementById("percentage").value;
+                if (percentage) {
+                    if (percentage >= 0 && percentage <= 100) {
+                        const hours = (percentage / 100) * totalHours;
+                        const minutes = hours * 60;
+                        outputArea.textContent = `${percentage}% of 8 hours is ${hours.toFixed(2)} hours (${Math.round(minutes)} minutes).`;
+                    } else {
+                        outputArea.textContent = "Please enter a percentage between 0 and 100.";
+                    }
+                } else {
+                    outputArea.textContent = "Please enter a valid percentage.";
                 }
             }
         }
     </script>
-
-    <!-- Developer's Info -->
-    <div class="developer">Developer: Nitesh Kharose</div>
 </body>
 </html>
