@@ -243,7 +243,8 @@
                 if (percentage) {
                     if (percentage >= 0 && percentage <= 100) {
                         const minutes = (percentage / 100) * totalMinutes;
-                        outputArea.textContent = `${percentage}% of 8 hours is ${minutes.toFixed(2)} minutes.`;
+                        const hours =  minutes/60 ;
+                        outputArea.textContent = `${percentage}% of 8 hours is ${hours} Hrs ( ${minutes.toFixed(2)} minutes ) per day.  `;
                     } else {
                         outputArea.textContent = "Please enter a percentage between 0 and 100.";
                     }
