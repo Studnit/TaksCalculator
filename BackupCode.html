@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allocation Time and Percentage Calculator</title>
+    <style>
+        /* Existing styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            background: linear-gradient(45deg, #ff6a00, #ffcc00);
+            animation: sunlightAnimation 10s ease infinite;
+        }
+
+        /* Sunlight Effect (Gradual Warm Transition) */
+        @keyframes sunlightAnimation {
+            0% { background: linear-gradient(45deg, #ff6a00, #ffcc00); }
+            25% { background: linear-gradient(45deg, #ffcc00, #fff700); }
+            50% { background: linear-gradient(45deg, #fff700, #a7d8ff); }
+            75% { background: linear-gradient(45deg, #a7d8ff, #ff6a00); }
+            100% { background: linear-gradient(45deg, #ff6a00, #ffcc00); }
+        }
+
+        /* Rainbow Effect (Vibrant Color Transition) */
+        /* 
+        @keyframes rainbowAnimation {
+            0% { background: linear-gradient(45deg, #ff0000, #ff7300); }
+            14% { background: linear-gradient(45deg, #ff7300, #fffc00); }
+            28% { background: linear-gradient(45deg, #fffc00, #00ff00); }
+            42% { background: linear-gradient(45deg, #00ff00, #00b0ff); }
+            57% { background: linear-gradient(45deg, #00b0ff, #7a00ff); }
+            71% { background: linear-gradient(45deg, #7a00ff, #ff00ff); }
+            85% { background: linear-gradient(45deg, #ff00ff, #ff0000); }
+            100% { background: linear-gradient(45deg, #ff0000, #ff7300); }
+        }
+        */
+
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            font-size: 1em;
+            user-select: none;
+            pointer-events: none;
+            animation: fall 10s linear infinite, drift 5s ease-in-out infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -10%;
+                opacity: 1;
+            }
+            100% {
+                top: 110%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes drift {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(50px);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #ddd;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #fff;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .output-area {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .developer {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Allocation Time and Percentage Calculator</h1>
+        
+        <label for="inputType">Select Calculation Type:</label>
+        <select id="inputType" onchange="toggleInputFields()">
+            <option value="hours">Hours to Percentage</option>
+            <option value="minutes">Minutes to Percentage</option>
+            <option value="percentage">Percentage to Time</option>
+        </select>
+        
+        <div id="minutesInputField" style="display: none;">
+            <label for="minutes">Enter Minutes Worked <br>(eg : 30 min out of 480 min per day):</label>
+            <input type="number" id="minutes" placeholder="Enter minutes worked" min="0" max="480">
+       		<label for="daysInMinutes">Enter Days Worked:</label>
+            <input type="number" id="daysInMinutes" placeholder="Enter number of days" min="0">
+             </div>
+        
+        <div id="hoursInputField">
+            <label for="hours">Enter Hours Worked <br>(e.g : 3hr 50 min to 3.5 hours out of 8 hrs per day):</label>
+            <input type="number" id="hours" placeholder="Enter hours worked" min="0" max="8">
+            <label for="daysInHours">Enter Days Worked:</label>
+            <input type="number" id="daysInHours" placeholder="Enter number of days" min="0">
+        </div>
+
+        <div id="percentageInputField" style="display: none;">
+            <label for="percentage">Enter Percentage (0-100):</label>
+            <input type="number" id="percentage" placeholder="Enter percentage" min="0" max="100">
+        </div>
+        
+        <button onclick="calculate()">Calculate</button>
+        
+        <div id="output" class="output-area">Output will appear here.</div>
+    </div>
+
+    <!-- Developer's Info -->
+    <div class="developer">Developer: Nitesh Kharose</div>
+
+    <script>
+        function toggleInputFields() {
+            const inputType = document.getElementById("inputType").value;
+            const minutesField = document.getElementById("minutesInputField");
+            const hoursField = document.getElementById("hoursInputField");
+            const percentageField = document.getElementById("percentageInputField");
+
+            minutesField.style.display = "none";
+            hoursField.style.display = "none";
+            percentageField.style.display = "none";
+
+            if (inputType === "minutes") {
+                minutesField.style.display = "block";
+            } else if (inputType === "hours") {
+                hoursField.style.display = "block";
+            } else if (inputType === "percentage") {
+                percentageField.style.display = "block";
+            }
+        }
+
+        function calculate() {
+            const inputType = document.getElementById("inputType").value;
+            const outputArea = document.getElementById("output");
+
+            const totalHours = 8;
+            const totalMinutes = totalHours * 60;
+
+            outputArea.textContent = ""; // Reset output
+
+            if (inputType === "minutes") {
+                const days = document.getElementById("daysInMinutes").value;
+                const minutes = document.getElementById("minutes").value;
+              
+                 if (days && minutes) {
+                    if (minutes >= 0 && minutes <= totalMinutes && days >= 0) {
+                        // Calculate total working minutes based on hours worked
+                        const totalMinuteWorked = minutes  * daysInHours;
+                        const percentage = parseFloat(minutes / 480) * 100;
+                        outputArea.textContent = `You worked ${minutes} Minute (${ (minutes/60 ).toFixed(2)} hrs) per day, which is ${percentage.toFixed(2)}% per day. Your total working minutes over ${days} days is ${(minutes * days)} minutes (${parseFloat(parseFloat(minutes * days)/60).toFixed(2)} hrs).`;
+                    
+                    } else {
+                        outputArea.textContent = "Please enter valid values for days and hours.";
+                    }
+                }
+            } else if (inputType === "hours") {
+            	 const hoursWorked = document.getElementById("hours").value;
+                 const daysInHours = document.getElementById("daysInHours").value;
+                 if (hoursWorked && daysInHours) {
+                     if (hoursWorked >= 0 && hoursWorked <= totalHours && daysInHours >= 0) {
+                         // Calculate total working minutes based on hours worked
+                         const totalHoursWorked = hoursWorked  * daysInHours;
+                         const percentage = (hoursWorked / 8) * 100;
+                         outputArea.textContent = `You worked ${hoursWorked} hours per day, which is ${percentage.toFixed(2)}% per day. Your total working minutes over ${daysInHours} days is ${totalHoursWorked.toFixed(2)} minutes.`;
+                     
+                     } else {
+                         outputArea.textContent = "Please enter valid values for days and hours.";
+                     }
+                 }
+            } else if (inputType === "percentage") {
+                const percentage = document.getElementById("percentage").value;
+                if (percentage) {
+                    if (percentage >= 0 && percentage <= 100) {
+                        const minutes = (percentage / 100) * totalMinutes;
+                        const hours =  minutes/60 ;
+                        outputArea.textContent = `${percentage}% of 8 hours is ${hours} Hrs ( ${minutes.toFixed(2)} minutes ) per day.  `;
+                    } else {
+                        outputArea.textContent = "Please enter a percentage between 0 and 100.";
+                    }
+                } else {
+                    outputArea.textContent = "Please enter a valid percentage.";
+                }
+            }
+        }
+
+        // Create Snowflakes
+        function createSnowflake() {
+            const snowflake = document.createElement("div");
+            snowflake.classList.add("snowflake");
+            snowflake.textContent = "❄";
+            snowflake.style.left = Math.random() * window.innerWidth + "px";
+            snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
+            snowflake.style.animationDuration = Math.random() * 5 + 5 + "s";
+            document.body.appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 10000);
+        }
+
+        setInterval(createSnowflake, 200); // Generate snowflakes every 200ms
+    </script>
+</body>
+</html>
