@@ -20,17 +20,32 @@
             align-items: center;
             height: 100vh;
             color: #fff;
-            background: linear-gradient(180deg, #1e3c72, #2a5298);
-            animation: gradientAnimation 10s ease infinite;
+            background: linear-gradient(45deg, #ff6a00, #ffcc00);
+            animation: sunlightAnimation 10s ease infinite;
         }
 
-        @keyframes gradientAnimation {
-            0% { background: linear-gradient(45deg, #1e3c72, #2a5298); }
-            25% { background: linear-gradient(45deg, #ff6a00, #ee0979); }
-            50% { background: linear-gradient(45deg, #3a1c71, #ffaf7b); }
-            75% { background: linear-gradient(45deg, #283c86, #45a247); }
-            100% { background: linear-gradient(45deg, #1e3c72, #2a5298); }
+        /* Sunlight Effect (Gradual Warm Transition) */
+        @keyframes sunlightAnimation {
+            0% { background: linear-gradient(45deg, #ff6a00, #ffcc00); }
+            25% { background: linear-gradient(45deg, #ffcc00, #fff700); }
+            50% { background: linear-gradient(45deg, #fff700, #a7d8ff); }
+            75% { background: linear-gradient(45deg, #a7d8ff, #ff6a00); }
+            100% { background: linear-gradient(45deg, #ff6a00, #ffcc00); }
         }
+
+        /* Rainbow Effect (Vibrant Color Transition) */
+        /* 
+        @keyframes rainbowAnimation {
+            0% { background: linear-gradient(45deg, #ff0000, #ff7300); }
+            14% { background: linear-gradient(45deg, #ff7300, #fffc00); }
+            28% { background: linear-gradient(45deg, #fffc00, #00ff00); }
+            42% { background: linear-gradient(45deg, #00ff00, #00b0ff); }
+            57% { background: linear-gradient(45deg, #00b0ff, #7a00ff); }
+            71% { background: linear-gradient(45deg, #7a00ff, #ff00ff); }
+            85% { background: linear-gradient(45deg, #ff00ff, #ff0000); }
+            100% { background: linear-gradient(45deg, #ff0000, #ff7300); }
+        }
+        */
 
         .snowflake {
             position: absolute;
@@ -153,7 +168,7 @@
         </div>
         
         <div id="hoursInputField">
-            <label for="hours">Enter Hours Worked <br>(e.g : 3hr 50 min to 3.5 hours out of 8 par day):</label>
+            <label for="hours">Enter Hours Worked <br>(e.g : 3hr 50 min to 3.5 hours out of 8 per day):</label>
             <input type="number" id="hours" placeholder="Enter hours worked" min="0" max="8">
             <label for="daysInHours">Enter Days Worked:</label>
             <input type="number" id="daysInHours" placeholder="Enter number of days" min="0">
@@ -202,34 +217,26 @@
             outputArea.textContent = ""; // Reset output
 
             if (inputType === "minutes") {
-                const daysInMinutes = document.getElementById("daysInMinutes").value;
-                const minutesWorked = document.getElementById("minutes").value;
-                if (minutesWorked && daysInMinutes) {
-                    if (minutesWorked >= 0 && minutesWorked <= totalMinutes && daysInMinutes >= 0) {
-                        // Calculate total working minutes across days
-                        const totalMinutesWorked = (daysInMinutes * minutesWorked);
-                        const percentage = (totalMinutesWorked / totalMinutes) * 100;
-                        outputArea.textContent = `Total Worked ${totalMinutesWorked} minutes is ${percentage.toFixed(2)}% of 8 hours over ${daysInMinutes} days.`;
-                    } else {
-                        outputArea.textContent = "Please enter valid values for days and minutes.";
-                    }
+                const days = document.getElementById("daysInMinutes").value;
+                const minutes = document.getElementById("minutes").value;
+
+                if (days && minutes) {
+                    const totalMinutesWorked = days * minutes;
+                    const percentage = (totalMinutesWorked / totalMinutes) * 100;
+                    outputArea.textContent = `You have worked ${totalMinutesWorked} minutes which is ${percentage.toFixed(2)}% of the total work time over ${days} days.`;
                 } else {
-                    outputArea.textContent = "Please enter a valid number of minutes and days.";
+                    outputArea.textContent = "Please enter valid values for days and minutes worked.";
                 }
             } else if (inputType === "hours") {
-                const hoursWorked = document.getElementById("hours").value;
-                const daysInHours = document.getElementById("daysInHours").value;
-                if (hoursWorked && daysInHours) {
-                    if (hoursWorked >= 0 && hoursWorked <= totalHours && daysInHours >= 0) {
-                        // Calculate total working minutes based on hours worked
-                        const totalMinutesWorked = (hoursWorked * 60) * daysInHours;
-                        const percentage = (totalMinutesWorked / totalMinutes) * 100;
-                        outputArea.textContent = `You worked ${hoursWorked} hours per day, which is ${percentage.toFixed(2)}% per day. Your total working minutes over ${daysInHours} days is ${totalMinutesWorked} minutes.`;
-                    } else {
-                        outputArea.textContent = "Please enter valid values for days and hours.";
-                    }
+                const hours = document.getElementById("hours").value;
+                const days = document.getElementById("daysInHours").value;
+
+                if (hours && days) {
+                    const totalMinutesWorked = (hours * 60) * days;
+                    const percentage = (totalMinutesWorked / totalMinutes) * 100;
+                    outputArea.textContent = `You have worked ${totalMinutesWorked} minutes which is ${percentage.toFixed(2)}% of the total work time over ${days} days.`;
                 } else {
-                    outputArea.textContent = "Please enter a valid number of hours and days.";
+                    outputArea.textContent = "Please enter valid values for days and hours.";
                 }
             } else if (inputType === "percentage") {
                 const percentage = document.getElementById("percentage").value;
