@@ -161,14 +161,14 @@
         </select>
         
         <div id="minutesInputField" style="display: none;">
-            <label for="daysInMinutes">Enter Days Worked:</label>
-            <input type="number" id="daysInMinutes" placeholder="Enter number of days" min="0">
-            <label for="minutes">Enter Minutes Worked <br>(eg : 30 min out of 480 per day):</label>
+            <label for="minutes">Enter Minutes Worked <br>(eg : 30 min out of 480 min per day):</label>
             <input type="number" id="minutes" placeholder="Enter minutes worked" min="0" max="480">
-        </div>
+       		<label for="daysInMinutes">Enter Days Worked:</label>
+            <input type="number" id="daysInMinutes" placeholder="Enter number of days" min="0">
+             </div>
         
         <div id="hoursInputField">
-            <label for="hours">Enter Hours Worked <br>(e.g : 3hr 50 min to 3.5 hours out of 8 per day):</label>
+            <label for="hours">Enter Hours Worked <br>(e.g : 3hr 50 min to 3.5 hours out of 8 hrs per day):</label>
             <input type="number" id="hours" placeholder="Enter hours worked" min="0" max="8">
             <label for="daysInHours">Enter Days Worked:</label>
             <input type="number" id="daysInHours" placeholder="Enter number of days" min="0">
@@ -219,25 +219,32 @@
             if (inputType === "minutes") {
                 const days = document.getElementById("daysInMinutes").value;
                 const minutes = document.getElementById("minutes").value;
-
-                if (days && minutes) {
-                    const totalMinutesWorked = days * minutes;
-                    const percentage = (totalMinutesWorked / totalMinutes) * 100;
-                    outputArea.textContent = `You have worked ${totalMinutesWorked} minutes which is ${percentage.toFixed(2)}% of the total work time over ${days} days.`;
-                } else {
-                    outputArea.textContent = "Please enter valid values for days and minutes worked.";
+              
+                 if (days && minutes) {
+                    if (minutes >= 0 && minutes <= totalMinutes && days >= 0) {
+                        // Calculate total working minutes based on hours worked
+                        const totalMinuteWorked = minutes  * daysInHours;
+                        const percentage = parseFloat(minutes / 480) * 100;
+                        outputArea.textContent = `You worked ${minutes} Minute (${ (minutes/60 ).toFixed(2)} hrs) per day, which is ${percentage.toFixed(2)}% per day. Your total working minutes over ${days} days is ${(minutes * days)} minutes (${parseFloat(parseFloat(minutes * days)/60).toFixed(2)} hrs).`;
+                    
+                    } else {
+                        outputArea.textContent = "Please enter valid values for days and hours.";
+                    }
                 }
             } else if (inputType === "hours") {
-                const hours = document.getElementById("hours").value;
-                const days = document.getElementById("daysInHours").value;
-
-                if (hours && days) {
-                    const totalMinutesWorked = (hours * 60) * days;
-                    const percentage = (totalMinutesWorked / totalMinutes) * 100;
-                    outputArea.textContent = `You have worked ${totalMinutesWorked} minutes which is ${percentage.toFixed(2)}% of the total work time over ${days} days.`;
-                } else {
-                    outputArea.textContent = "Please enter valid values for days and hours.";
-                }
+            	 const hoursWorked = document.getElementById("hours").value;
+                 const daysInHours = document.getElementById("daysInHours").value;
+                 if (hoursWorked && daysInHours) {
+                     if (hoursWorked >= 0 && hoursWorked <= totalHours && daysInHours >= 0) {
+                         // Calculate total working minutes based on hours worked
+                         const totalHoursWorked = hoursWorked  * daysInHours;
+                         const percentage = (hoursWorked / 8) * 100;
+                         outputArea.textContent = `You worked ${hoursWorked} hours per day, which is ${percentage.toFixed(2)}% per day. Your total working minutes over ${daysInHours} days is ${totalHoursWorked.toFixed(2)} minutes.`;
+                     
+                     } else {
+                         outputArea.textContent = "Please enter valid values for days and hours.";
+                     }
+                 }
             } else if (inputType === "percentage") {
                 const percentage = document.getElementById("percentage").value;
                 if (percentage) {
