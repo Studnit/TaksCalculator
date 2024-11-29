@@ -147,9 +147,25 @@
             font-weight: bold;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
+        .date-time {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+}
+
     </style>
 </head>
 <body>
+    <div class="date-time" id="dateTime"></div>
+
     <div class="container">
         <h1>Allocation Time and Percentage Calculator</h1>
         
@@ -188,6 +204,21 @@
     <div class="developer">Developer: Nitesh Kharose</div>
 
     <script>
+        function updateDateTime() {
+    const dateTimeElement = document.getElementById("dateTime");
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const date = now.toLocaleDateString(undefined, options); // Localized date format
+    const time = now.toLocaleTimeString(); // Localized time format
+    dateTimeElement.textContent = `${date} | ${time}`;
+}
+
+// Update the date and time every second
+setInterval(updateDateTime, 1000);
+
+// Initialize the date and time on page load
+updateDateTime();
+
         function toggleInputFields() {
             const inputType = document.getElementById("inputType").value;
             const minutesField = document.getElementById("minutesInputField");
