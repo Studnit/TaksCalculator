@@ -411,7 +411,7 @@ renderCalendar(currentDate);
                          // Calculate total working minutes based on hours worked
                          const totalHoursWorked = hoursWorked  * daysInHours;
                          const percentage = (hoursWorked / 8) * 100;
-                         outputArea.textContent = `You worked ${hoursWorked} hours per day, which is ${percentage.toFixed(2)}% per day. Your total working minutes over ${daysInHours} days is ${totalHoursWorked.toFixed(2)} minutes.`;
+                         outputArea.textContent = `You worked ${hoursWorked} hours per day, which is ${percentage.toFixed(2)}% per day. Your total working minutes over ${daysInHours} days is ${totalHoursWorked.toFixed(2)} hours.`;
                      
                      } else {
                          outputArea.textContent = "Please enter valid values for days and hours.";
